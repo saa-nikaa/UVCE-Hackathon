@@ -10,7 +10,7 @@
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
-      <img src="assets/logo.png" alt="AgriConnect" />
+      <img src="assets/logo.png" alt="AgriConnect Logo" />
       <h1>AgriConnect</h1>
     </div>
     <nav>
@@ -19,7 +19,14 @@
       <a href="equipment.html">Equipment Hub</a>
       <a href="advisory.html">Advisory</a>
       <a href="community.html">Community</a>
-      <a href="login.html" class="btn-login">Login</a>
+      <span id="authLinks">
+        <a href="login.html" class="btn-login">Login</a>
+        <a href="register.html" class="btn-register">Register</a>
+      </span>
+      <span id="dashboardLink" style="display: none;">
+        <a href="dashboard.html" class="btn-dashboard">Dashboard</a>
+        <button id="logoutBtn" class="btn-logout">Logout</button>
+      </span>
     </nav>
   </header>
 
@@ -30,7 +37,13 @@
       <p>
         Connect with buyers, access equipment, get AI-powered advisory, and grow your business.
       </p>
-      <a href="register.html" class="btn-primary">Get Started</a>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn-primary">Get Started</a>
+        <a href="login.html" class="btn-secondary">Login</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/farming-hero.png" alt="Farmers working" />
     </div>
   </section>
 
@@ -58,6 +71,26 @@
   <footer>
     <p>© 2025 AgriConnect. All Rights Reserved.</p>
   </footer>
+
+  <!-- Link to Auth JS -->
+  <script src="js/auth.js"></script>
+  <script>
+    // Show Dashboard + Logout if user is logged in
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    if (user) {
+      document.getElementById("authLinks").style.display = "none";
+      document.getElementById("dashboardLink").style.display = "inline-block";
+    }
+
+    // Logout Button
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("loggedInUser");
+        alert("Logged out successfully!");
+        window.location.href = "index.html";
+      });
+    }
+  </script>
 </body>
 </html>
-
