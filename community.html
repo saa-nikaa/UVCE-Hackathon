@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="AgriConnect Logo">
+    <h1>AgriConnect</h1>
+  </div>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <button id="logoutBtn" class="btn-logout">Logout</button>
+  </nav>
+</header>
+
+<div class="dashboard-container">
+  <h2>Community Forum 🌱</h2>
+
+  <!-- Ask Question Section -->
+  <section class="section">
+    <h3>Ask a Question</h3>
+    <div class="auth-container">
+      <textarea id="questionInput" placeholder="Ask a question..." rows="3"></textarea>
+      <button id="postQuestionBtn">Post Question</button>
+    </div>
+  </section>
+
+  <!-- Questions / Answers Section -->
+  <section class="section">
+    <h3>All Questions</h3>
+    <div id="questionsList" class="feature-grid"></div>
+  </section>
+
+  <!-- Tips Section -->
+  <section class="section">
+    <h3>Farming Tips</h3>
+    <div id="tipsList" class="feature-grid"></div>
+  </section>
+</div>
+
+<footer>
+  <p>© 2025 AgriConnect. All Rights Reserved.</p>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if(!user) { 
+    alert("⚠ Please login first!"); 
+    window.location.href = "login.html"; 
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+  });
+
+  const questionsListDiv = document.getElementById("questionsList");
+  const tipsListDiv = document.getElementById("tipsList");
+
+  let questions = JSON.parse(localStorage.getItem("questions")) || [];
+  let tips = JSON.parse(localStorage.getItem("tips")) || [
+    "Water your crops early in the morning to reduce evaporation.",
+    "Use organic compost for better soil health.",
+    "Rotate crops to prevent soil depletion.",
+    "Monitor weather forecasts to prevent crop damage.",
+    "Prune plants regularly to increase yield."
+  ];
+
+  function renderQuestions() {
+    questionsListDiv.innerHTML = "";
+    if(questions.length === 0) questionsListDiv.innerHTML = "<p>No questions yet. Be the first to ask!</p>";
+
+    questions.forEach((q, idx) => {
+      const card = document.createElement("div");
+      card.classList.add("feature-card");
+      card.innerHTML = `
+        <p><strong>${q.user}:</strong> ${q.text}</p>
+        <p><small>${q.date}</small></p>
+      `;
+      questionsListDiv.appendChild(card);
+    });
+  }
+
+  function renderTips() {
+    tipsListDiv.innerHTML = "";
+    tips.forEach(tip => {
+      const card = document.createElement("div");
+      card.classList.add("feature-card");
+      card.innerHTML = `<p>💡 ${tip}</p>`;
+      tipsListDiv.appendChild(card);
+    });
+  }
+
+  document.getElementById("postQuestionBtn").addEventListener("click", () => {
+    const text = document.getElementById("questionInput").value.trim();
+    if(!text) { alert("⚠ Enter a question!"); return; }
+
+    questions.push({
+      text: text,
+      user: user.name,
+      date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("questions", JSON.stringify(questions));
+    document.getElementById("questionInput").value = "";
+    renderQuestions();
+  });
+
+  renderQuestions();
+  renderTips();
+});
+</script>
+</body>
+</html>

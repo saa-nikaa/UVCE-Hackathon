@@ -152,5 +152,3 @@ document.addEventListener("DOMContentLoaded", () => {
     loadEquipment();
   });
 
-  loadEquipment();
-});
