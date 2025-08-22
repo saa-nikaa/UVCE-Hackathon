@@ -8,74 +8,16 @@
 </head>
 <body>
   <div class="auth-container">
-    <form id="registerForm" class="auth-form">
-      <h2>Create Your Account</h2>
-
-      <!-- Full Name -->
+    <form id="registerForm">
+      <h2>Register</h2>
       <input type="text" id="name" placeholder="Full Name" required />
-
-      <!-- Phone -->
-      <input 
-        type="tel" 
-        id="phone" 
-        placeholder="Phone Number" 
-        pattern="[0-9]{10}" 
-        title="Enter a valid 10-digit phone number" 
-        required 
-      />
-
-      <!-- Email -->
+      <input type="tel" id="phone" placeholder="Phone Number" required />
       <input type="email" id="email" placeholder="Email" required />
-
-      <!-- Password -->
-      <input 
-        type="password" 
-        id="password" 
-        placeholder="Password (min 6 characters)" 
-        minlength="6" 
-        required 
-      />
-
-      <!-- Confirm Password -->
-      <input 
-        type="password" 
-        id="confirmPassword" 
-        placeholder="Confirm Password" 
-        minlength="6" 
-        required 
-      />
-
-      <!-- Error Message -->
-      <p id="errorMsg" class="error-msg"></p>
-
-      <!-- Register Button -->
-      <button type="submit" class="btn-primary">Register</button>
-
-      <!-- Redirect to Login -->
-      <p class="redirect">
-        Already have an account? 
-        <a href="login.html">Login</a>
-      </p>
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="login.html">Login</a></p>
     </form>
   </div>
-
   <script src="js/auth.js"></script>
-  <script>
-    // Validate confirm password before submitting form
-    const registerForm = document.getElementById("registerForm");
-    const password = document.getElementById("password");
-    const confirmPassword = document.getElementById("confirmPassword");
-    const errorMsg = document.getElementById("errorMsg");
-
-    registerForm.addEventListener("submit", (e) => {
-      if (password.value !== confirmPassword.value) {
-        e.preventDefault();
-        errorMsg.textContent = "Passwords do not match!";
-        errorMsg.style.display = "block";
-      } else {
-        errorMsg.style.display = "none";
-      }
-    });
-  </script>
 </body>
 </html>

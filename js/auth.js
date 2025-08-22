@@ -9,11 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     registerForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const name = document.getElementById("regName").value.trim();
-      const email = document.getElementById("regEmail").value.trim();
-      const password = document.getElementById("regPassword").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-      if (!name || !email || !password) {
+      if (!name || !phone || !email || !password) {
         alert("⚠️ Please fill in all fields!");
         return;
       }
@@ -25,16 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Encrypt password before saving (basic encoding for demo)
+      // Encode password before saving (demo purpose)
       const encryptedPassword = btoa(password);
 
       const user = {
         name: name,
+        phone: phone,
         email: email,
         password: encryptedPassword,
       };
 
-      // Save user in localStorage
+      // Save user to localStorage
       localStorage.setItem(email, JSON.stringify(user));
 
       alert("✅ Registration successful! Please login.");
@@ -69,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const decryptedPassword = atob(userData.password);
 
       if (password === decryptedPassword) {
-        // Save session data
+        // Save session
         sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
 
         alert(`✅ Welcome back, ${userData.name}!`);
