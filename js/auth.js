@@ -100,3 +100,54 @@ function checkLogin() {
     window.location.href = "login.html";
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+
+  // Register new user
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Check if email already exists
+      if (users.some((u) => u.email === email)) {
+        alert("Email already registered! Please login.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      users.push({ name, phone, email, password });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Registered successfully! Please login.");
+      window.location.href = "login.html";
+    });
+  }
+
+  // Login existing user
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find((u) => u.email === email && u.password === password);
+
+      if (user) {
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid email or password!");
+      }
+    });
+  }
+});
