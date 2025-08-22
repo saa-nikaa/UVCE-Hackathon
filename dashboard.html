@@ -6,63 +6,68 @@
   <title>Dashboard - AgriConnect</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<<<<<<< HEAD
-<body onload="loadUserDetails()">
-  <div class="dashboard-container">
-    <h1>Welcome to AgriConnect</h1>
-    <div class="user-info">
-      <p><strong>Name:</strong> <span id="userName"></span></p>
-      <p><strong>Email:</strong> <span id="userEmail"></span></p>
-      <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+<body onload="checkLogin()">
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="assets/logo.png" alt="AgriConnect" />
+      <h1>AgriConnect</h1>
     </div>
-    <button onclick="logoutUser()" class="logout-btn">Logout</button>
-  </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="equipment.html">Equipment Hub</a>
+      <a href="advisory.html">Advisory</a>
+      <a href="community.html">Community</a>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
+    </nav>
+  </header>
 
-  <script src="js/auth.js"></script>
-  <script>
-    function loadUserDetails() {
-      const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
-      if (!user) {
-        alert("⚠️ Please login first!");
-        window.location.href = "login.html";
-        return;
-      }
+  <!-- Dashboard Content -->
+  <main class="dashboard-container">
+    <h2>Welcome, <span id="userName"></span>!</h2>
 
-      document.getElementById("userName").textContent = user.name;
-      document.getElementById("userEmail").textContent = user.email;
-      document.getElementById("userPhone").textContent = user.phone;
-    }
-  </script>
-</body>
-</html>
-=======
-<body>
-  <div class="dashboard-container">
-    <header>
-      <img src="assets/logo.png" alt="AgriConnect" class="logo" />
-      <h1>Welcome, <span id="userName"></span> 👋</h1>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </header>
-
-    <section class="user-info">
-      <h2>Your Profile</h2>
+    <section class="profile-section">
+      <h3>Profile Information</h3>
       <p><strong>Name:</strong> <span id="profileName"></span></p>
       <p><strong>Email:</strong> <span id="profileEmail"></span></p>
       <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
     </section>
 
-    <section class="dashboard-actions">
-      <h2>Explore AgriConnect</h2>
-      <div class="actions-grid">
-        <a href="#" class="action-card">🌾 Marketplace</a>
-        <a href="#" class="action-card">🚜 Equipment Rentals</a>
-        <a href="#" class="action-card">💡 AI Advisory</a>
-        <a href="#" class="action-card">👥 Community Forum</a>
-      </div>
+    <section class="dashboard-links">
+      <h3>Quick Access</h3>
+      <ul>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="equipment.html">Equipment Hub</a></li>
+        <li><a href="advisory.html">AI Advisory</a></li>
+        <li><a href="community.html">Community Forum</a></li>
+      </ul>
     </section>
-  </div>
-  
-  <script src="js/dashboard.js"></script>
+  </main>
+
+  <!-- Scripts -->
+
+
+<script src="js/auth.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if (user) {
+      document.getElementById("userName").textContent = user.name;
+      document.getElementById("profileName").textContent = user.name;
+      document.getElementById("profileEmail").textContent = user.email;
+      document.getElementById("profilePhone").textContent = user.phone;
+
+      // Attach logout button
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        logoutUser(); // This now redirects to index.html
+      });
+    }
+  });
+</script>
+
+</script>
+
 </body>
 </html>
->>>>>>> 44896d67f131332fd52d358eeb9197ce62bb177e

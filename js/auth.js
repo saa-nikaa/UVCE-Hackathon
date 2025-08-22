@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Encode password before saving (demo purpose)
+      // Encrypt password (basic encoding)
       const encryptedPassword = btoa(password);
 
       const user = {
@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const decryptedPassword = atob(userData.password);
 
       if (password === decryptedPassword) {
-        // Save session
-        sessionStorage.setItem("loggedInUser", JSON.stringify(userData));
+        // Save currently logged-in user
+        localStorage.setItem("currentUser", JSON.stringify(userData));
 
         alert(`✅ Welcome back, ${userData.name}!`);
         window.location.href = "dashboard.html";
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // LOGOUT USER
 // ============================
 function logoutUser() {
-  sessionStorage.removeItem("loggedInUser");
+  localStorage.removeItem("currentUser");
   alert("👋 Logged out successfully!");
   window.location.href = "login.html";
 }
@@ -96,60 +96,15 @@ function logoutUser() {
 // CHECK LOGIN STATUS
 // ============================
 function checkLogin() {
-  const user = sessionStorage.getItem("loggedInUser");
+  const user = JSON.parse(localStorage.getItem("currentUser"));
   if (!user) {
     alert("⚠️ Please login to access this page!");
     window.location.href = "login.html";
   }
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const registerForm = document.getElementById("registerForm");
-  const loginForm = document.getElementById("loginForm");
 
-  // Register new user
-  if (registerForm) {
-    registerForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-
-      // Check if email already exists
-      if (users.some((u) => u.email === email)) {
-        alert("Email already registered! Please login.");
-        window.location.href = "login.html";
-        return;
-      }
-
-      users.push({ name, phone, email, password });
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("Registered successfully! Please login.");
-      window.location.href = "login.html";
-    });
-  }
-
-  // Login existing user
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find((u) => u.email === email && u.password === password);
-
-      if (user) {
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Invalid email or password!");
-      }
-    });
-  }
-});
+function logoutUser() {
+  localStorage.removeItem("currentUser");
+  alert("👋 Logged out successfully!");
+  window.location.href = "index.html"; // Redirect to homepage instead of login
+}
