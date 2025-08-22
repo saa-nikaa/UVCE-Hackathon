@@ -63,3 +63,66 @@
 <script src="js/equipment.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment Hub - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="AgriConnect Logo">
+    <h1>AgriConnect</h1>
+  </div>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <button id="logoutBtn" class="btn-logout">Logout</button>
+  </nav>
+</header>
+
+<div class="dashboard-container">
+  <h2>Equipment Hub 🚜</h2>
+
+  <!-- Browse & Rent Section -->
+  <section class="section">
+    <h3>Browse & Rent</h3>
+    <div id="equipmentList" class="feature-grid"></div>
+  </section>
+
+  <!-- My Listed Equipment Section -->
+  <section class="section">
+    <h3>My Listed Equipment</h3>
+    <div id="myListedEquipment" class="feature-grid"></div>
+  </section>
+
+  <!-- My Rented Equipment Section -->
+  <section class="section">
+    <h3>My Rented Equipment</h3>
+    <div id="myRentedEquipment" class="feature-grid"></div>
+  </section>
+
+  <!-- Add Equipment Form -->
+  <section class="section">
+    <h3>List New Equipment</h3>
+    <div class="auth-container">
+      <input type="text" id="equipName" placeholder="Equipment Name">
+      <input type="number" id="equipQuantity" placeholder="Quantity">
+      <input type="number" id="equipPrice" placeholder="Price per Day">
+      <input type="text" id="equipLocation" placeholder="Location">
+      <input type="text" id="equipIcon" placeholder="Icon filename (optional)">
+      <button id="addEquipBtn">Add Equipment</button>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>© 2025 AgriConnect. All Rights Reserved.</p>
+</footer>
+
+<script src="js/equipment.js"></script>
+</body>
+</html>
