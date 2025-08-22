@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Advisory - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Advisory-specific styling */
+    .section table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .section table th, .section table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .section table th {
+      background-color: #2d6a4f;
+      color: #fff;
+    }
+    .section table tr:nth-child(even) {
+      background-color: #f0fef5;
+    }
+    .section h3 {
+      color: #2d6a4f;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="AgriConnect Logo">
+    <h1>AgriConnect</h1>
+  </div>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="equipment.html">Equipment Hub</a>
+    <button id="logoutBtn" class="btn-logout">Logout</button>
+  </nav>
+</header>
+
+<div class="dashboard-container">
+  <h2>AI Advisory 🤖</h2>
+
+  <!-- Weather Section -->
+  <div class="section">
+    <h3>Weather Forecast 🌤️</h3>
+    <div id="weatherInfo" class="feature-card">
+      <p>Loading weather info...</p>
+    </div>
+  </div>
+
+  <!-- Crop Price Prediction -->
+  <div class="section">
+    <h3>Crop Price Prediction 📈</h3>
+    <div id="pricePrediction" class="feature-card">
+      <p>Select a crop to see predicted price.</p>
+      <select id="cropSelect">
+        <option value="">-- Select Crop --</option>
+        <option value="Wheat">Wheat</option>
+        <option value="Rice">Rice</option>
+        <option value="Maize">Maize</option>
+        <option value="Tomato">Tomato</option>
+        <option value="Potato">Potato</option>
+      </select>
+      <button id="predictBtn">Predict Price</button>
+      <p id="predictedPrice"></p>
+    </div>
+  </div>
+
+  <!-- Personalized Suggestions -->
+  <div class="section">
+    <h3>Personalized Suggestions 🌱</h3>
+    <div id="suggestions" class="feature-card">
+      <p>Loading suggestions...</p>
+    </div>
+  </div>
+
+  <!-- Best Time to Buy/Sell Crops (Next 10 Days) -->
+  <div class="section">
+    <h3>Best Time to Buy/Sell Crops 🕒 (Next 10 Days)</h3>
+    <div id="cropTiming" class="feature-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Crop</th>
+            <th>Best Time to Sell</th>
+            <th>Best Time to Buy</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 AgriConnect. All Rights Reserved.</p>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // LOGIN CHECK
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if(!user){
+    alert("⚠️ Please login first!");
+    window.location.href = "login.html";
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+  });
+
+  // ================= WEATHER SIMULATION =================
+  const weatherInfo = document.getElementById("weatherInfo");
+  const sampleWeather = [
+    "Sunny, 32°C",
+    "Rainy, 25°C",
+    "Cloudy, 28°C",
+    "Thunderstorms, 24°C",
+    "Windy, 30°C"
+  ];
+  weatherInfo.innerHTML = `<p>Today's Weather: ${sampleWeather[Math.floor(Math.random()*sampleWeather.length)]}</p>`;
+
+  // ================= PRICE PREDICTION SIMULATION =================
+  const cropSelect = document.getElementById("cropSelect");
+  const predictBtn = document.getElementById("predictBtn");
+  const predictedPrice = document.getElementById("predictedPrice");
+
+  predictBtn.addEventListener("click", () => {
+    const crop = cropSelect.value;
+    if(!crop){
+      alert("⚠️ Please select a crop!");
+      return;
+    }
+    const price = Math.floor(Math.random() * (200 - 50 + 1)) + 50;
+    predictedPrice.textContent = `Predicted Price for ${crop}: ₹${price}/kg`;
+
+    // Highlight selected crop in Best Time table
+    const rows = document.querySelectorAll("#cropTiming tbody tr");
+    rows.forEach(row => {
+      row.style.backgroundColor = "";
+      if(row.cells[0].textContent === crop) row.style.backgroundColor = "#e6f4ea";
+    });
+  });
+
+  // ================= PERSONALIZED SUGGESTIONS =================
+  const suggestions = [
+    "Consider planting maize in the next season for higher yield.",
+    "Sell wheat during early morning for better market price.",
+    "Use organic fertilizer for tomato to improve quality.",
+    "Monitor soil moisture daily for potato crops.",
+    "Diversify crops to reduce risk of pest infestation."
+  ];
+  document.getElementById("suggestions").innerHTML = `<ul>${suggestions.map(s => `<li>${s}</li>`).join("")}</ul>`;
+
+  // ================= BEST TIME TO BUY/SELL (Next 10 Days) =================
+  const cropTimingRows = [
+    { crop: "Wheat", sell: Math.floor(Math.random()*3+1), buy: Math.floor(Math.random()*4+1) },
+    { crop: "Rice", sell: Math.floor(Math.random()*5+1), buy: Math.floor(Math.random()*3+1) },
+    { crop: "Maize", sell: Math.floor(Math.random()*4+1), buy: Math.floor(Math.random()*4+1) },
+    { crop: "Tomato", sell: Math.floor(Math.random()*2+1), buy: Math.floor(Math.random()*8+1) },
+    { crop: "Potato", sell: Math.floor(Math.random()*6+1), buy: Math.floor(Math.random()*3+1) },
+  ];
+
+  const tbody = document.querySelector("#cropTiming tbody");
+  tbody.innerHTML = cropTimingRows.map(r =>
+    `<tr>
+       <td>${r.crop}</td>
+       <td>Within ${r.sell} days</td>
+       <td>Within ${r.buy} days</td>
+     </tr>`).join("");
+});
+</script>
+</body>
+</html>
