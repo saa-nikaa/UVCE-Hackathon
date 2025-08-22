@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <header>
+      <img src="assets/logo.png" alt="AgriConnect" class="logo" />
+      <h1>Welcome, <span id="userName"></span> 👋</h1>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </header>
+
+    <section class="user-info">
+      <h2>Your Profile</h2>
+      <p><strong>Name:</strong> <span id="profileName"></span></p>
+      <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+      <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+    </section>
+
+    <section class="dashboard-actions">
+      <h2>Explore AgriConnect</h2>
+      <div class="actions-grid">
+        <a href="#" class="action-card">🌾 Marketplace</a>
+        <a href="#" class="action-card">🚜 Equipment Rentals</a>
+        <a href="#" class="action-card">💡 AI Advisory</a>
+        <a href="#" class="action-card">👥 Community Forum</a>
+      </div>
+    </section>
+  </div>
+  
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
