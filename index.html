@@ -10,23 +10,16 @@
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
-      <img src="assets/logo.png" alt="AgriConnect Logo" />
+      <img src="assets/logo.png" alt="AgriConnect" />
       <h1>AgriConnect</h1>
     </div>
     <nav>
-      <a href="index.html">Home</a>
+      <a href="index.html" class="active">Home</a>
       <a href="marketplace.html">Marketplace</a>
       <a href="equipment.html">Equipment Hub</a>
       <a href="advisory.html">Advisory</a>
       <a href="community.html">Community</a>
-      <span id="authLinks">
-        <a href="login.html" class="btn-login">Login</a>
-        <a href="register.html" class="btn-register">Register</a>
-      </span>
-      <span id="dashboardLink" style="display: none;">
-        <a href="dashboard.html" class="btn-dashboard">Dashboard</a>
-        <button id="logoutBtn" class="btn-logout">Logout</button>
-      </span>
+      <a href="login.html" class="btn-login">Login</a>
     </nav>
   </header>
 
@@ -35,7 +28,8 @@
     <div class="hero-content">
       <h2>Empowering Farmers Digitally 🌱</h2>
       <p>
-        Connect with buyers, access equipment, get AI-powered advisory, and grow your business.
+        AgriConnect connects farmers with buyers, provides access to equipment,
+        offers AI-powered advisory, and builds a strong farming community.
       </p>
       <div class="hero-buttons">
         <a href="register.html" class="btn-primary">Get Started</a>
@@ -43,54 +37,46 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="assets/farming-hero.png" alt="Farmers working" />
+      <img src="assets/farming-hero.png" alt="Farming" />
     </div>
   </section>
 
   <!-- Features Section -->
   <section class="features">
-    <div class="feature">
-      <h3>🌾 Marketplace</h3>
-      <p>List crops, find buyers, and get real-time pricing insights.</p>
+    <h2 class="section-title">Our Services</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🌾 Marketplace</h3>
+        <p>List your crops, find buyers, and get real-time pricing insights.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🚜 Equipment Hub</h3>
+        <p>Rent, buy, or share farming equipment easily and affordably.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🤖 AI Advisory</h3>
+        <p>Get crop price predictions, weather updates, and farming tips.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📚 Community</h3>
+        <p>Learn modern farming practices and connect with experts.</p>
+      </div>
     </div>
-    <div class="feature">
-      <h3>🚜 Equipment Hub</h3>
-      <p>Rent, buy, or share farming equipment easily.</p>
-    </div>
-    <div class="feature">
-      <h3>🤖 AI Advisory</h3>
-      <p>Get crop price predictions, weather forecasts, and farming tips.</p>
-    </div>
-    <div class="feature">
-      <h3>📚 Community</h3>
-      <p>Learn modern farming practices and connect with experts.</p>
-    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <h2>Join AgriConnect Today!</h2>
+    <p>Be part of the digital farming revolution and grow your business smarter.</p>
+    <a href="register.html" class="btn-primary">Sign Up Now</a>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>© 2025 AgriConnect. All Rights Reserved.</p>
+    <div class="footer-content">
+      <p>© 2025 AgriConnect. All Rights Reserved.</p>
+      <p>Made with ❤️ for Farmers</p>
+    </div>
   </footer>
-
-  <!-- Link to Auth JS -->
-  <script src="js/auth.js"></script>
-  <script>
-    // Show Dashboard + Logout if user is logged in
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
-    if (user) {
-      document.getElementById("authLinks").style.display = "none";
-      document.getElementById("dashboardLink").style.display = "inline-block";
-    }
-
-    // Logout Button
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        sessionStorage.removeItem("loggedInUser");
-        alert("Logged out successfully!");
-        window.location.href = "index.html";
-      });
-    }
-  </script>
 </body>
 </html>

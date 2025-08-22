@@ -1,9 +1,15 @@
-/* Reset */
+/* General Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f8fdf6;
+  color: #333;
+  line-height: 1.6;
 }
 
 /* Navbar */
@@ -11,83 +17,183 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2e7d32;
-  padding: 10px 50px;
-  color: white;
+  background-color: #2d6a4f;
+  padding: 15px 50px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
-.navbar .logo {
+.logo {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+.logo img {
+  width: 45px;
+  height: 45px;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
 .navbar nav a {
-  color: white;
-  margin: 0 12px;
+  margin: 0 15px;
   text-decoration: none;
-  font-weight: bold;
+  color: #fff;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+  color: #ffd166;
 }
 
 .btn-login {
-  background-color: white;
-  color: #2e7d32;
-  padding: 5px 12px;
+  padding: 8px 16px;
+  background-color: #ffd166;
+  color: #333 !important;
+  font-weight: bold;
   border-radius: 5px;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #ffb703;
 }
 
 /* Hero Section */
 .hero {
-  background: url("../assets/images/farm-bg.jpg") center/cover no-repeat;
-  height: 70vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  color: white;
-  text-align: center;
+  padding: 60px 80px;
+  background-color: #e6f4ea;
 }
 
 .hero-content {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 30px;
-  border-radius: 10px;
+  max-width: 50%;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  color: #2d6a4f;
+}
+
+.hero-content p {
+  margin: 15px 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.hero-buttons {
+  margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 10px 20px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-right: 10px;
+  transition: 0.3s;
 }
 
 .btn-primary {
-  display: inline-block;
-  background-color: #2e7d32;
-  color: white;
-  padding: 10px 18px;
-  margin-top: 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
+  background-color: #2d6a4f;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #1b4332;
+}
+
+.btn-secondary {
+  background-color: #ffd166;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #ffb703;
+}
+
+.hero-image img {
+  width: 420px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Features */
 .features {
+  padding: 60px 80px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #2d6a4f;
+}
+
+.feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  padding: 30px 50px;
-  background: #f4f4f4;
 }
 
-.feature {
-  background: white;
+.feature-card {
+  background: #fff;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+/* CTA Section */
+.cta {
+  background-color: #2d6a4f;
+  color: #fff;
+  padding: 50px 20px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 40px;
+  border-radius: 12px;
+}
+
+.cta h2 {
+  font-size: 2rem;
+}
+
+.cta p {
+  margin: 10px 0 20px;
+}
+
+.cta .btn-primary {
+  background-color: #ffd166;
+  color: #333;
+}
+
+.cta .btn-primary:hover {
+  background-color: #ffb703;
 }
 
 /* Footer */
 footer {
+  background-color: #1b4332;
+  padding: 20px;
+  color: #fff;
   text-align: center;
-  background: #2e7d32;
-  color: white;
-  padding: 10px;
+  margin-top: 40px;
+  border-radius: 8px 8px 0 0;
 }
+
 
 /* ============================= */
 /* AUTHENTICATION PAGE STYLING   */
