@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "index.html";
   });
 
-  // ================= INITIAL SAMPLE EQUIPMENT =================
   let equipment = JSON.parse(localStorage.getItem("equipment")) || [];
   if (equipment.length === 0) {
     equipment = [
@@ -31,18 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const rentals = JSON.parse(localStorage.getItem("rentals")) || [];
 
   function loadEquipment() {
-    // --- Browse & Rent ---
+    // Browse & Rent
     equipmentListDiv.innerHTML = "";
     equipment.filter(e => e.owner !== user.email && e.quantity > 0)
       .forEach((equip, idx) => {
-        const priceColor = equip.price < 100 ? "#b7e4c7" :
-                           equip.price <= 500 ? "#ffe066" : "#ffadad";
+        const priceColor = equip.price < 100 ? "#b7e4c7" : equip.price <= 500 ? "#ffe066" : "#ffadad";
 
         const card = document.createElement("div");
         card.classList.add("feature-card");
         card.innerHTML = `
           <h3>
-            <img src="assets/images/${equip.icon || "default.png"}" alt="${equip.name} Icon">
+            <img src="assets/images/${equip.icon || "default.png"}" alt="${equip.name} Icon" style="width:24px;height:24px;margin-right:6px;">
             ${equip.name}
           </h3>
           <p>Quantity: ${equip.quantity}</p>
@@ -56,12 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
         equipmentListDiv.appendChild(card);
       });
 
-    // --- My Listed Equipment ---
+    // My Listed Equipment
     myListedDiv.innerHTML = "";
     equipment.filter(e => e.owner === user.email)
       .forEach(equip => {
-        const priceColor = equip.price < 100 ? "#b7e4c7" :
-                           equip.price <= 500 ? "#ffe066" : "#ffadad";
+        const priceColor = equip.price < 100 ? "#b7e4c7" : equip.price <= 500 ? "#ffe066" : "#ffadad";
 
         const card = document.createElement("div");
         card.classList.add("feature-card");
@@ -76,12 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
         myListedDiv.appendChild(card);
       });
 
-    // --- My Rented Equipment ---
+    // My Rented Equipment
     myRentedDiv.innerHTML = "";
     rentals.filter(r => r.renter === user.email)
       .forEach(rental => {
-        const priceColor = rental.price < 100 ? "#b7e4c7" :
-                           rental.price <= 500 ? "#ffe066" : "#ffadad";
+        const priceColor = rental.price < 100 ? "#b7e4c7" : rental.price <= 500 ? "#ffe066" : "#ffadad";
 
         const card = document.createElement("div");
         card.classList.add("feature-card");
@@ -98,10 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  // RENT EQUIPMENT
   window.rentEquip = function(idx) {
     const available = equipment.filter(e => e.owner !== user.email && e.quantity > 0);
     const equip = available[idx];
-    const qtyInput = document.getElementById(rentQty${idx});
+    const qtyInput = document.getElementById(`rentQty${idx}`);
     const qty = Number(qtyInput.value);
 
     if (!qty || qty < 1 || qty > equip.quantity) {
@@ -122,10 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     localStorage.setItem("rentals", JSON.stringify(rentals));
 
-    alert(✅ Rented ${qty} ${equip.name}(s));
+    alert(`✅ Rented ${qty} ${equip.name}(s)`);
     loadEquipment();
   };
 
+  // ADD EQUIPMENT
   document.getElementById("addEquipBtn").addEventListener("click", () => {
     const name = document.getElementById("equipName").value.trim();
     const quantity = Number(document.getElementById("equipQuantity").value);
@@ -141,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     equipment.push({ name, quantity, price, location, icon, owner: user.email });
     localStorage.setItem("equipment", JSON.stringify(equipment));
 
-    alert(✅ ${name} listed successfully!);
+    alert(`✅ ${name} listed successfully!`);
 
     document.getElementById("equipName").value = "";
     document.getElementById("equipQuantity").value = "";
@@ -152,3 +150,5 @@ document.addEventListener("DOMContentLoaded", () => {
     loadEquipment();
   });
 
+  loadEquipment();
+});
