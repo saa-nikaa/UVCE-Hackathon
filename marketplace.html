@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="assets/logo.png" alt="AgriConnect Logo">
+      <h1>AgriConnect</h1>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="marketplace.html" class="active">Marketplace</a>
+      <a href="equipment.html">Equipment Hub</a>
+      <a href="advisory.html">Advisory</a>
+      <a href="community.html">Community</a>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
+    </nav>
+  </header>
+
+  <div class="dashboard-container">
+    <h2>Marketplace 🌾</h2>
+
+    <div class="marketplace-sections">
+      <div class="marketplace-card" onclick="window.location.href='selling.html'">
+        <i class="fa-solid fa-truck-field"></i>
+        <h3>My Selling</h3>
+        <p>View & manage crops you are selling</p>
+      </div>
+
+      <div class="marketplace-card" onclick="window.location.href='buying.html'">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <h3>Available to Buy</h3>
+        <p>Browse crops available for purchase</p>
+      </div>
+
+      <div class="marketplace-card" onclick="window.location.href='transaction.html'">
+        <i class="fa-solid fa-receipt"></i>
+        <h3>Transactions</h3>
+        <p>View history of bought & sold crops</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AgriConnect. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if(!user){
+      alert("⚠️ Please login first!");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("currentUser");
+      alert("👋 Logged out successfully!");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

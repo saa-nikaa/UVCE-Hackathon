@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell Crops - AgriConnect</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Selling page styles */
+    .sell-form {
+      width: 360px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .sell-form h2 {
+      color: #2d6a4f;
+      margin-bottom: 15px;
+    }
+
+    .sell-form input, .sell-form select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .sell-form input:focus, .sell-form select:focus {
+      border-color: #2d6a4f;
+    }
+
+    .sell-form button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background-color: #2d6a4f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sell-form button:hover {
+      background-color: #1b4332;
+    }
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="AgriConnect Logo">
+    <h1>AgriConnect</h1>
+  </div>
+  <nav>
+    <a href="marketplace.html">Marketplace</a>
+    <button id="logoutBtn" class="btn-logout">Logout</button>
+  </nav>
+</header>
+
+<div class="sell-form">
+  <h2>Sell Your Crop 🌾</h2>
+  <input type="text" id="cropName" placeholder="Crop Name" required>
+  <input type="number" id="cropQuantity" placeholder="Quantity (kg)" required>
+  <input type="number" id="cropPrice" placeholder="Price per kg (₹)" required>
+  <input type="text" id="cropLocation" placeholder="Location" required>
+  <input type="text" id="cropIcon" placeholder="Icon filename (optional)">
+  <button id="sellBtn">List Crop for Sale</button>
+</div>
+
+<footer>
+  <p>© 2025 AgriConnect. All Rights Reserved.</p>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if(!user){ alert("⚠️ Please login first!"); window.location.href="login.html"; }
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href="index.html";
+  });
+
+  document.getElementById("sellBtn").addEventListener("click", () => {
+    const name = document.getElementById("cropName").value.trim();
+    const quantity = Number(document.getElementById("cropQuantity").value);
+    const price = Number(document.getElementById("cropPrice").value);
+    const location = document.getElementById("cropLocation").value.trim();
+    const icon = document.getElementById("cropIcon").value.trim() || "default.png";
+
+    if(!name || !quantity || !price || !location){
+      alert("⚠️ Please fill all fields correctly!");
+      return;
+    }
+
+    const crops = JSON.parse(localStorage.getItem("crops")) || [];
+    crops.push({
+      name,
+      quantity,
+      price,
+      location,
+      owner: user.email,
+      icon
+    });
+
+    localStorage.setItem("crops", JSON.stringify(crops));
+    alert(`✅ ${name} listed for sale successfully!`);
+    document.getElementById("cropName").value = "";
+    document.getElementById("cropQuantity").value = "";
+    document.getElementById("cropPrice").value = "";
+    document.getElementById("cropLocation").value = "";
+    document.getElementById("cropIcon").value = "";
+  });
+});
+</script>
+</body>
+</html>

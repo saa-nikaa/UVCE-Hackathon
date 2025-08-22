@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - AgriConnect</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body onload="checkLogin()">
 
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
-      <img src="assets/logo.png" alt="AgriConnect" />
+      <img src="assets/logo.png" alt="AgriConnect Logo">
       <h1>AgriConnect</h1>
     </div>
     <nav>
@@ -24,50 +28,61 @@
     </nav>
   </header>
 
-  <!-- Dashboard Content -->
-  <main class="dashboard-container">
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
     <h2>Welcome, <span id="userName"></span>!</h2>
 
-    <section class="profile-section">
-      <h3>Profile Information</h3>
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <h3>Profile Info</h3>
       <p><strong>Name:</strong> <span id="profileName"></span></p>
       <p><strong>Email:</strong> <span id="profileEmail"></span></p>
       <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
-    </section>
+    </div>
 
-    <section class="dashboard-links">
+    <!-- Quick Links -->
+    <div class="dashboard-links">
       <h3>Quick Access</h3>
       <ul>
-        <li><a href="marketplace.html">Marketplace</a></li>
-        <li><a href="equipment.html">Equipment Hub</a></li>
-        <li><a href="advisory.html">AI Advisory</a></li>
-        <li><a href="community.html">Community Forum</a></li>
+        <li><a href="marketplace.html"><i class="fa-solid fa-warehouse"></i> Marketplace</a></li>
+        <li><a href="equipment.html"><i class="fa-solid fa-tractor"></i> Equipment Hub</a></li>
+        <li><a href="advisory.html"><i class="fa-solid fa-robot"></i> AI Advisory</a></li>
+        <li><a href="community.html"><i class="fa-solid fa-users"></i> Community</a></li>
       </ul>
-    </section>
-  </main>
+    </div>
+  </div>
 
-  <!-- Scripts -->
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 AgriConnect. All Rights Reserved.</p>
+  </footer>
 
+  <!-- JS -->
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("currentUser"));
 
-<script src="js/auth.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if (user) {
+      // Redirect if not logged in
+      if (!user) {
+        alert("⚠️ Please login first!");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Display user info
       document.getElementById("userName").textContent = user.name;
       document.getElementById("profileName").textContent = user.name;
       document.getElementById("profileEmail").textContent = user.email;
       document.getElementById("profilePhone").textContent = user.phone;
 
-      // Attach logout button
+      // Logout button
       document.getElementById("logoutBtn").addEventListener("click", () => {
-        logoutUser(); // This now redirects to index.html
+        localStorage.removeItem("currentUser");
+        alert("👋 Logged out successfully!");
+        window.location.href = "index.html";
       });
-    }
-  });
-</script>
-
-</script>
-
+    });
+  </script>
 </body>
 </html>
