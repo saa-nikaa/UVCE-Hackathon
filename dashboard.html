@@ -1,116 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard - AgriConnect</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body onload="checkLogin()">
+
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
-      <img src="assets/logo.png" alt="AgriConnect Logo">
+      <img src="assets/logo.png" alt="AgriConnect" />
       <h1>AgriConnect</h1>
     </div>
     <nav>
-      <a href="index.html" data-key="home">Home</a>
-      <a href="marketplace.html" data-key="marketplace">Marketplace</a>
-      <a href="equipment.html" data-key="equipment">Equipment Hub</a>
-      <a href="advisory.html" data-key="advisory">Advisory</a>
-      <a href="community.html" data-key="community">Community</a>
-      <button id="logoutBtn" class="btn-logout" data-key="logout">Logout</button>
-      <select id="langSelect">
-        <option value="en">English</option>
-        <option value="kn">Kannada</option>
-        <option value="te">Telugu</option>
-        <option value="ml">Malayalam</option>
-      </select>
+      <a href="index.html">🏠 Home</a>
+      <a href="marketplace.html">🌾 Marketplace</a>
+      <a href="equipment.html">🚜 Equipment Hub</a>
+      <a href="advisory.html">🤖 Advisory</a>
+      <a href="community.html">📚 Community</a>
+      <button id="logoutBtn" class="btn-logout">🔒 Logout</button>
     </nav>
   </header>
 
   <!-- Dashboard Content -->
-  <div class="dashboard-container">
-    <h2 data-key="welcome">Welcome, <span id="userName"></span>!</h2>
+  <main class="dashboard-container">
+    <h2>Welcome, <span id="userName"></span>! 👋</h2>
 
-    <div class="dashboard-sections">
-      <div class="section">
-        <h3 data-key="profile">Profile Information</h3>
-        <p><strong data-key="nameLabel">Name:</strong> <span id="profileName"></span></p>
-        <p><strong data-key="emailLabel">Email:</strong> <span id="profileEmail"></span></p>
-        <p><strong data-key="phoneLabel">Phone:</strong> <span id="profilePhone"></span></p>
-      </div>
+    <section class="profile-section">
+      <h3>👤 Profile Information</h3>
+      <p>👤 <strong>Name:</strong> <span id="profileName"></span></p>
+      <p>📧 <strong>Email:</strong> <span id="profileEmail"></span></p>
+      <p>📞 <strong>Phone:</strong> <span id="profilePhone"></span></p>
+    </section>
 
-      <div class="section">
-        <h3 data-key="myMarketplace">My Marketplace Items</h3>
-        <div id="myMarketplace" class="feature-grid"></div>
-      </div>
+    <section class="dashboard-links">
+      <h3>🔗 Quick Access</h3>
+      <ul>
+        <li>🌾 <a href="marketplace.html">Marketplace</a></li>
+        <li>🚜 <a href="equipment.html">Equipment Hub</a></li>
+        <li>🤖 <a href="advisory.html">AI Advisory</a></li>
+        <li>📚 <a href="community.html">Community Forum</a></li>
+      </ul>
+    </section>
+  </main>
 
-      <div class="section">
-        <h3 data-key="myEquipment">My Equipment</h3>
-        <div id="myEquipment" class="feature-grid"></div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <p>© 2025 AgriConnect. All Rights Reserved.</p>
-  </footer>
-
+  <!-- Scripts -->
   <script src="js/auth.js"></script>
-  <script src="js/multilingual.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const user = JSON.parse(localStorage.getItem("currentUser"));
-      if(!user){
-        alert("⚠ Please login first!");
-        window.location.href="login.html";
+      if (user) {
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("profileName").textContent = user.name;
+        document.getElementById("profileEmail").textContent = user.email;
+        document.getElementById("profilePhone").textContent = user.phone;
+
+        // Attach logout functionality
+        const logoutBtn = document.getElementById("logoutBtn");
+        logoutBtn.addEventListener("click", () => {
+          logoutUser(); // calls function from auth.js
+        });
       }
-
-      // Display user info
-      document.getElementById("userName").textContent = user.name;
-      document.getElementById("profileName").textContent = user.name;
-      document.getElementById("profileEmail").textContent = user.email;
-      document.getElementById("profilePhone").textContent = user.phone;
-
-      // Logout
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("currentUser");
-        window.location.href="index.html";
-      });
-
-      // Load user marketplace items
-      const allMarketplace = JSON.parse(localStorage.getItem("marketplace")) || [];
-      const myMarketplaceDiv = document.getElementById("myMarketplace");
-      myMarketplaceDiv.innerHTML = "";
-      allMarketplace.filter(item => item.seller === user.email)
-        .forEach(item => {
-          const card = document.createElement("div");
-          card.classList.add("feature-card");
-          card.innerHTML = `
-            <h3>${item.crop}</h3>
-            <p>Quantity: ${item.quantity} kg</p>
-            <p>Price: ₹${item.price}/kg</p>
-          `;
-          myMarketplaceDiv.appendChild(card);
-        });
-
-      // Load user equipment
-      const allEquipment = JSON.parse(localStorage.getItem("equipment")) || [];
-      const myEquipmentDiv = document.getElementById("myEquipment");
-      myEquipmentDiv.innerHTML = "";
-      allEquipment.filter(eq => eq.owner === user.email)
-        .forEach(eq => {
-          const card = document.createElement("div");
-          card.classList.add("feature-card");
-          card.innerHTML = `
-            <h3>${eq.name}</h3>
-            <p>Quantity: ${eq.quantity}</p>
-            <p>Price: ₹${eq.price}/day</p>
-          `;
-          myEquipmentDiv.appendChild(card);
-        });
     });
   </script>
+
 </body>
 </html>
