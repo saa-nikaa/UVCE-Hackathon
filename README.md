@@ -56,25 +56,27 @@ The platform ensures **secure authentication**, smooth navigation, and a **moder
 ## 📂 Project Structure
 
 AgriConnect/
-│── index.html # Homepage
-│── register.html # Registration page
-│── login.html # Login page
-│── dashboard.html # User dashboard
-│── marketplace.html # Marketplace for crops
-│── equipment.html # Equipment rental hub
-│── advisory.html # AI advisory section
-│── community.html # Community forum
+│
+├── index.html               # Homepage
+├── register.html            # Registration page
+├── login.html               # Login page
+├── dashboard.html           # User dashboard
+├── marketplace.html         # Marketplace for crops
+├── equipment.html           # Equipment rental hub
+├── advisory.html            # AI advisory section
+├── community.html           # Community forum
 │
 ├── css/
-│ └── style.css # Main styling file
+│   └── style.css            # Main styling file
 │
 ├── js/
-│ ├── auth.js # Handles login & registration
-│ ├── dashboard.js # Manages dashboard data
-│ ├── marketplace.js # Handles marketplace actions
+│   ├── auth.js             # Handles login & registration
+│   ├── dashboard.js        # Manages dashboard data
+│   ├── marketplace.js      # Handles marketplace actions
 │
 ├── assets/
-│ ├── logo.png # Project logo
-│ ├── images/ # UI images & illustrations
+│   ├── logo.png            # Project logo
+│   ├── images/             # UI images & illustrations
 │
-└── README.md # Project documentation
+└── README.md               # Project documentation
+
