@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Equipment Hub - AgriConnect</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <header class="navbar">
     <div class="logo">
-      <img src="assets/logo.png" alt="AgriConnect Logo" />
+      <img src="assets/logo.jpg" alt="AgriConnect" />
       <h1>AgriConnect</h1>
     </div>
     <nav>
@@ -18,35 +19,33 @@
       <a href="equipment.html" class="active">Equipment Hub</a>
       <a href="advisory.html">Advisory</a>
       <a href="community.html">Community</a>
-      <button id="logoutBtn">Logout</button>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
     </nav>
   </header>
 
   <main class="dashboard-container">
-    <h2>Equipment Hub</h2>
-
     <section>
-      <h3>Browse & Rent</h3>
+      <h2>Browse Equipment</h2>
       <div id="equipmentList" class="feature-grid"></div>
     </section>
 
     <section>
-      <h3>My Listed Equipment</h3>
+      <h2>My Listed Equipment</h2>
       <div id="myListedEquipment" class="feature-grid"></div>
     </section>
 
     <section>
-      <h3>My Rented Equipment</h3>
+      <h2>My Rented Equipment</h2>
       <div id="myRentedEquipment" class="feature-grid"></div>
     </section>
 
     <section>
-      <h3>Add Equipment</h3>
+      <h2>Add Equipment</h2>
       <input type="text" id="equipName" placeholder="Name" />
       <input type="number" id="equipQuantity" placeholder="Quantity" />
-      <input type="number" id="equipPrice" placeholder="Price per hour" />
+      <input type="number" id="equipPrice" placeholder="Price per Hour" />
       <input type="text" id="equipLocation" placeholder="Location" />
-      <input type="text" id="equipIcon" placeholder="Icon filename" />
+      <input type="text" id="equipIcon" placeholder="Icon file name" />
       <button id="addEquipBtn">Add Equipment</button>
     </section>
   </main>

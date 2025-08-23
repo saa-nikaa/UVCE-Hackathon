@@ -3,58 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Available Crops - AgriConnect</title>
+  <title>Marketplace - AgriConnect</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    /* Crop Card Styles */
+    /* Card Styles */
+    .feature-card {
+      border: 1px solid #ddd;
+      padding: 12px;
+      margin: 10px;
+      border-radius: 8px;
+      display: inline-block;
+      width: 220px;
+      vertical-align: top;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
     .feature-card img {
       width: 40px;
       height: 40px;
-      margin-right: 10px;
+      margin-right: 8px;
       vertical-align: middle;
     }
-
     .price-cheap { color: #1b4332; font-weight: bold; }      /* Green */
     .price-moderate { color: #ffb703; font-weight: bold; }   /* Orange */
     .price-expensive { color: #d00000; font-weight: bold; }  /* Red */
-
-    .feature-card input {
-      width: 80px;
-      margin-right: 10px;
-      padding: 6px;
-    }
-
+    .feature-card input { width: 60px; margin-right: 6px; padding: 4px; }
     .feature-card button {
-      padding: 6px 12px;
-      background-color: #2d6a4f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
+      padding: 6px 10px; background-color: #2d6a4f; color: #fff;
+      border: none; border-radius: 6px; cursor: pointer;
     }
-
-    .feature-card button:hover {
-      background-color: #1b4332;
-    }
+    .feature-card button:hover { background-color: #1b4332; }
+    .feature-grid { display: flex; flex-wrap: wrap; }
   </style>
 </head>
 <body>
+
 <header class="navbar">
   <div class="logo">
-    <img src="assets/logo.png" alt="AgriConnect Logo">
+    <img src="assets/logo.jpg" alt="AgriConnect Logo">
     <h1>AgriConnect</h1>
   </div>
   <nav>
-    <a href="marketplace.html">Marketplace</a>
-    <button id="logoutBtn" class="btn-logout">Logout</button>
+    <a href="marketplace.html" class="active">Marketplace</a>
+    <a href="equipment.html">Equipment Hub</a>
+    <button id="logoutBtn">Logout</button>
   </nav>
 </header>
 
-<div class="dashboard-container">
-  <h2>Available Crops to Buy</h2>
+<main class="dashboard-container">
+  <h2>Available Crops</h2>
   <div id="availableCrops" class="feature-grid"></div>
-</div>
+
+  <h2>My Purchases</h2>
+  <div id="myPurchases" class="feature-grid"></div>
+</main>
 
 <footer>
   <p>© 2025 AgriConnect. All Rights Reserved.</p>
@@ -72,23 +73,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const availableCropsDiv = document.getElementById("availableCrops");
+  const myPurchasesDiv = document.getElementById("myPurchases");
 
-  function loadAvailableCrops(){
-    const crops = JSON.parse(localStorage.getItem("crops")) || [];
+  // Sample crops
+  let crops = JSON.parse(localStorage.getItem("crops")) || [
+    { name: "Wheat", quantity: 50, price: 120, location: "Village A", owner: "farmer1", icon: "wheat.png" },
+    { name: "Rice", quantity: 80, price: 90, location: "Village B", owner: "farmer2", icon: "rice.png" },
+    { name: "Maize", quantity: 40, price: 200, location: "Village C", owner: "farmer3", icon: "maize.png" }
+  ];
+  localStorage.setItem("crops", JSON.stringify(crops));
+
+  let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+  function loadCrops() {
+    // Available crops
     availableCropsDiv.innerHTML = "";
-
-    crops.filter(c => c.owner !== user.email).forEach((crop, idx)=>{
+    crops.filter(c => c.owner !== user.email && c.quantity > 0).forEach((crop, idx) => {
       let priceClass = "price-moderate";
-      if(crop.price < 50) priceClass = "price-cheap";
+      if(crop.price < 100) priceClass = "price-cheap";
       else if(crop.price > 150) priceClass = "price-expensive";
 
       const card = document.createElement("div");
       card.classList.add("feature-card");
       card.innerHTML = `
-        <h3>
-          <img src="assets/images/${crop.icon || 'default.png'}" alt="${crop.name} Icon">
-          ${crop.name}
-        </h3>
+        <h3><img src="assets/images/${crop.icon}" alt="${crop.name} Icon">${crop.name}</h3>
         <p>Quantity: ${crop.quantity} kg</p>
         <p>Location: ${crop.location}</p>
         <p class="${priceClass}">Price: ₹${crop.price}/kg</p>
@@ -97,42 +105,51 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       availableCropsDiv.appendChild(card);
     });
+
+    // My purchases
+    myPurchasesDiv.innerHTML = "";
+    transactions.filter(t => t.buyer === user.email).forEach(purchase => {
+      const card = document.createElement("div");
+      card.classList.add("feature-card");
+      card.innerHTML = `
+        <h3>${purchase.crop}</h3>
+        <p>Quantity: ${purchase.quantity} kg</p>
+        <p>Total: ₹${purchase.price * purchase.quantity}</p>
+        <p>Seller: ${purchase.seller}</p>
+        <p>Date: ${purchase.date}</p>
+      `;
+      myPurchasesDiv.appendChild(card);
+    });
   }
 
-  window.buyCrop = function(idx){
-    const crops = JSON.parse(localStorage.getItem("crops")) || [];
-    const crop = crops.filter(c=>c.owner!==user.email)[idx];
+  window.buyCrop = function(idx) {
+    const crop = crops.filter(c => c.owner !== user.email && c.quantity > 0)[idx];
     const qty = Number(document.getElementById(`buyQty${idx}`).value);
-    if(!qty || qty < 1 || qty > crop.quantity){
-      alert("⚠️ Enter valid quantity!");
-      return;
-    }
+    if(!qty || qty < 1 || qty > crop.quantity){ alert("⚠️ Enter valid quantity!"); return; }
 
     // Update quantity
     crop.quantity -= qty;
-    const allCrops = JSON.parse(localStorage.getItem("crops")) || [];
-    const indexAll = allCrops.findIndex(c=>c.name===crop.name && c.owner===crop.owner);
+    const allCrops = JSON.parse(localStorage.getItem("crops"));
+    const indexAll = allCrops.findIndex(c => c.name===crop.name && c.owner===crop.owner);
     allCrops[indexAll] = crop;
     localStorage.setItem("crops", JSON.stringify(allCrops));
 
     // Record transaction
-    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
     transactions.push({
       crop: crop.name,
       quantity: qty,
       price: crop.price,
       buyer: user.email,
       seller: crop.owner,
-      type: "bought",
       date: new Date().toLocaleString()
     });
     localStorage.setItem("transactions", JSON.stringify(transactions));
 
     alert(`✅ Purchased ${qty}kg of ${crop.name}`);
-    loadAvailableCrops();
+    loadCrops();
   }
 
-  loadAvailableCrops();
+  loadCrops();
 });
 </script>
 </body>
