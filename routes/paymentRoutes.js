@@ -1,35 +1,35 @@
-import express from "express";
-import Razorpay from "razorpay";
-import crypto from "crypto";
+// backend/routes/paymentRoutes.js
+const express = require("express");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
 const router = express.Router();
 
-// 🔑 Load Razorpay keys from .env
 const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
 
 if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
   console.error("❌ Razorpay keys missing in .env");
 }
 
-// 🔧 Initialize Razorpay instance
 const razorpay = new Razorpay({
   key_id: RAZORPAY_KEY_ID,
   key_secret: RAZORPAY_KEY_SECRET,
 });
 
-// 📌 1. Create Order
+// 1) Create Order
 router.post("/order", async (req, res) => {
   try {
-    const { amount, currency = "INR" } = req.body;
-
+    const { amount, currency = "INR", receipt } = req.body;
+    if (!amount) {
+      return res.status(400).json({ success: false, message: "Amount is required" });
+    }
     const options = {
-      amount: amount, // 💰 amount in paise
+      amount: Number(amount), // ✅ amount already in paise from frontend
       currency,
-      receipt: "order_rcptid_" + Date.now(),
+      receipt: receipt || "order_rcptid_" + Date.now(),
     };
-
     const order = await razorpay.orders.create(options);
-    res.json({
+    return res.json({
       success: true,
       orderId: order.id,
       amount: order.amount,
@@ -38,30 +38,31 @@ router.post("/order", async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Order creation error:", err);
-    res.status(500).json({ success: false, message: "Failed to create order" });
+    return res.status(500).json({ success: false, message: "Failed to create order" });
   }
 });
 
-// 📌 2. Verify Payment Signature
-router.post("/verify", (req, res) => {
+// 2) Verify Payment Signature
+router.post("/verify", async (req, res) => {
   try {
     const { orderId, paymentId, signature } = req.body;
+    if (!orderId || !paymentId || !signature) {
+      return res.status(400).json({ success: false, message: "Missing fields" });
+    }
 
     const hmac = crypto.createHmac("sha256", RAZORPAY_KEY_SECRET);
     hmac.update(orderId + "|" + paymentId);
     const generatedSignature = hmac.digest("hex");
 
     if (generatedSignature === signature) {
-      console.log("✅ Payment verified:", paymentId);
-      res.json({ success: true, paymentId });
+      return res.json({ success: true, paymentId });
     } else {
-      console.log("❌ Invalid signature");
-      res.json({ success: false });
+      return res.json({ success: false, message: "Invalid signature" });
     }
   } catch (err) {
     console.error("❌ Verification error:", err);
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false, message: "Verification error" });
   }
 });
 
-export default router;
+module.exports = router;

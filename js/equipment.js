@@ -150,64 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadEquipment();
   };
 
-  // ✅ Razorpay Payment
-  async function makePayment(idx) {
-    const rental = rentals[idx];
-    if (rental.paid) { alert("✅ Already paid!"); return; }
-
-    const amount = rental.quantity * rental.hours * rental.price * 100; // paise
-
-    try {
-      // 1️⃣ Create order
-      const orderRes = await fetch("http://localhost:5000/api/payments/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount })
-      });
-      const { orderId, key, success } = await orderRes.json();
-      if (!success) { alert("❌ Order creation failed!"); return; }
-
-      // 2️⃣ Open Razorpay popup
-      const options = {
-        key,
-        amount,
-        currency: "INR",
-        name: "AgriConnect",
-        description: `Payment for ${rental.equipment}`,
-        order_id: orderId,
-        handler: async function (response) {
-          // 3️⃣ Verify on backend
-          const verifyRes = await fetch("http://localhost:5000/api/payments/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderId: response.razorpay_order_id,
-              paymentId: response.razorpay_payment_id,
-              signature: response.razorpay_signature
-            })
-          });
-          const verifyData = await verifyRes.json();
-
-          if (verifyData.success) {
-            rental.paid = true;
-            localStorage.setItem("rentals", JSON.stringify(rentals));
-            alert(`💰 Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-            loadEquipment();
-          } else {
-            alert("❌ Payment verification failed!");
-          }
-        },
-        prefill: { name: user.name, email: user.email }
-      };
-
-      const rzp = new Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("⚠ Payment failed. Try again.");
-    }
-  }
-
+  
   // Add Equipment
   document.getElementById("addEquipBtn").addEventListener("click", () => {
     const name = document.getElementById("equipName").value.trim();
@@ -233,3 +176,104 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadEquipment();
 });
+
+async function makePayment(idx) {
+  console.log("🟢 makePayment called with index:", idx);
+
+  const rental = rentals[idx];
+  if (!rental) {
+    console.error("❌ No rental found at index", idx);
+    alert("No rental found!");
+    return;
+  }
+
+  if (rental.paid) {
+    alert("✅ Already paid!");
+    return;
+  }
+
+  // ✅ Send amount in paise
+  const amount = rental.quantity * rental.hours * rental.price * 100;
+  console.log("💰 Calculated amount (paise):", amount);
+
+  try {
+    // 1️⃣ Create order
+    console.log("📡 Sending order request...");
+    const orderRes = await fetch("http://localhost:5000/api/payments/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount }),
+    });
+
+    console.log("📡 Order response status:", orderRes.status);
+
+    const resText = await orderRes.text();
+    console.log("📡 Order raw response:", resText);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(resText);
+    } catch (err) {
+      console.error("❌ Failed to parse JSON:", err);
+      alert("Server returned invalid JSON.");
+      return;
+    }
+
+    const { orderId, key, success, message } = parsed;
+    if (!success) {
+      console.error("❌ Order creation failed:", message);
+      alert("❌ Order creation failed: " + (message || "Unknown error"));
+      return;
+    }
+
+    console.log("✅ Order created:", orderId);
+
+    // 2️⃣ Open Razorpay popup
+    const options = {
+      key,
+      amount,
+      currency: "INR",
+      name: "AgriConnect",
+      description: `Payment for ${rental.equipment}`,
+      order_id: orderId,
+      handler: async function (response) {
+        console.log("🟢 Razorpay handler triggered:", response);
+
+        try {
+          const verifyRes = await fetch("http://localhost:5000/api/payments/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+          console.log("🔍 Verification response:", verifyData);
+
+          if (verifyData.success) {
+            rental.paid = true;
+            localStorage.setItem("rentals", JSON.stringify(rentals));
+            alert(`💰 Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+            loadEquipment();
+          } else {
+            alert("❌ Payment verification failed: " + (verifyData.message || "Invalid signature"));
+          }
+        } catch (err) {
+          console.error("❌ Verification error:", err);
+          alert("⚠ Payment verification failed.");
+        }
+      },
+      prefill: { name: user.name, email: user.email },
+    };
+
+    console.log("🟢 Opening Razorpay popup...");
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error("❌ Payment error:", err);
+    alert("⚠ Payment process failed. See console.");
+  }
+}

@@ -1,34 +1,54 @@
-// routes/paymentWebhook.js
-import express from "express";
-import crypto from "crypto";
-import Transaction from "../models/Transaction.js";
+// backend/routes/paymentWebhook.js
+const express = require("express");
+const crypto = require("crypto");
 
 const router = express.Router();
 
-router.post("/webhook", express.json({ type: "application/json" }), (req, res) => {
-  const signature = req.headers["x-razorpay-signature"];
-  const shasum = crypto.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET);
-  shasum.update(JSON.stringify(req.body));
-  const digest = shasum.digest("hex");
+// Use raw body for Razorpay signature verification
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    try {
+      const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+      const signature = req.headers["x-razorpay-signature"];
 
-  if (digest === signature) {
-    console.log("✅ Webhook verified:", req.body);
+      if (!webhookSecret) {
+        console.error("❌ RAZORPAY_WEBHOOK_SECRET not set");
+        return res.status(500).send("Secret missing");
+      }
 
-    // Example: update transaction in DB
-    const { payload } = req.body;
-    if (payload?.payment?.entity) {
-      const payment = payload.payment.entity;
-      Transaction.findOneAndUpdate(
-        { razorpay_order_id: payment.order_id },
-        { status: payment.status },
-        { new: true }
-      ).then(updated => console.log("Transaction updated:", updated));
+      const shasum = crypto.createHmac("sha256", webhookSecret);
+      // IMPORTANT: use raw body here
+      shasum.update(req.body);
+      const digest = shasum.digest("hex");
+
+      if (digest === signature) {
+        // Verified
+        const event = JSON.parse(req.body.toString("utf8"));
+        console.log("✅ Webhook verified:", event.event);
+
+        // Example: if payment authorized/captured, update DB
+        // const Transaction = require("../models/Transaction");
+        // await Transaction.findOneAndUpdate(
+        //   { razorpay_order_id: event.payload.payment.entity.order_id },
+        //   {
+        //     status: event.payload.payment.entity.status,
+        //     razorpay_payment_id: event.payload.payment.entity.id,
+        //   },
+        //   { upsert: true }
+        // );
+
+        return res.status(200).json({ status: "ok" });
+      } else {
+        console.warn("❌ Webhook signature mismatch");
+        return res.status(400).json({ status: "invalid-signature" });
+      }
+    } catch (err) {
+      console.error("❌ Webhook error:", err);
+      return res.status(500).json({ status: "error" });
     }
-  } else {
-    console.log("❌ Webhook signature mismatch");
   }
+);
 
-  res.json({ status: "ok" });
-});
-
-export default router;
+module.exports = router;

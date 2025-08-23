@@ -49,13 +49,19 @@ async function loadLatestPrices() {
   showHistory(prices[0].crop); // initial chart
 }
 
+// ✅ Global chart instance
+let priceChart;
+
 async function showHistory(crop) {
   const response = await fetch(`http://localhost:5000/api/prices/history/${crop}`);
   const data = await response.json();
   const labels = data.map(d => new Date(d.date).toLocaleDateString());
   const prices = data.map(d => d.pricePerKg);
 
-  new Chart(document.getElementById('priceChart'), {
+  // 🔥 Destroy old chart before creating new one
+  if (priceChart) priceChart.destroy();
+
+  priceChart = new Chart(document.getElementById('priceChart'), {
     type: 'line',
     data: {
       labels,
@@ -71,5 +77,6 @@ async function showHistory(crop) {
 
 loadLatestPrices();
 </script>
+
 </body>
 </html>
