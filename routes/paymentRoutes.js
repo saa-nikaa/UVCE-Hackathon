@@ -1,67 +1,64 @@
-// backend/routes/paymentRoutes.js
 const express = require("express");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-
 const router = express.Router();
 
-const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
-
-if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
-  console.error("❌ Razorpay keys missing in .env");
-}
-
+// init razorpay instance
 const razorpay = new Razorpay({
-  key_id: RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET,
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// 1) Create Order
+// @desc Create order
 router.post("/order", async (req, res) => {
   try {
-    const { amount, currency = "INR", receipt } = req.body;
-    if (!amount) {
-      return res.status(400).json({ success: false, message: "Amount is required" });
+    let { amount } = req.body;
+
+    // Convert ₹ to paise if amount is in rupees
+    if (amount < 1000000) {
+      amount = amount * 100; // assume frontend sends rupees
     }
+
     const options = {
-      amount: Number(amount), // ✅ amount already in paise from frontend
-      currency,
-      receipt: receipt || "order_rcptid_" + Date.now(),
+      amount: amount, // paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
     };
+
     const order = await razorpay.orders.create(options);
-    return res.json({
+
+    res.json({
       success: true,
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      key: RAZORPAY_KEY_ID,
+      key: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
-    console.error("❌ Order creation error:", err);
-    return res.status(500).json({ success: false, message: "Failed to create order" });
+    console.error("Order error:", err);
+    res.status(500).json({ success: false, message: "Order creation failed" });
   }
 });
 
-// 2) Verify Payment Signature
-router.post("/verify", async (req, res) => {
+// @desc Verify payment
+router.post("/verify", (req, res) => {
   try {
     const { orderId, paymentId, signature } = req.body;
-    if (!orderId || !paymentId || !signature) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
-    }
 
-    const hmac = crypto.createHmac("sha256", RAZORPAY_KEY_SECRET);
-    hmac.update(orderId + "|" + paymentId);
-    const generatedSignature = hmac.digest("hex");
+    const sign = orderId + "|" + paymentId;
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
 
-    if (generatedSignature === signature) {
-      return res.json({ success: true, paymentId });
+    if (expectedSign === signature) {
+      return res.json({ success: true });
     } else {
-      return res.json({ success: false, message: "Invalid signature" });
+      return res.json({ success: false });
     }
   } catch (err) {
-    console.error("❌ Verification error:", err);
-    return res.status(500).json({ success: false, message: "Verification error" });
+    console.error("Verify error:", err);
+    res.status(500).json({ success: false, message: "Verification failed" });
   }
 });
 

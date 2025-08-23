@@ -277,3 +277,61 @@ async function makePayment(idx) {
     alert("⚠ Payment process failed. See console.");
   }
 }
+
+async function makePayment(amount) {
+  try {
+    // Step 1: Create order from backend
+    const res = await fetch("http://localhost:5000/api/payments/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount }), // in rupees
+    });
+
+    const data = await res.json();
+    if (!data.success) {
+      alert("Failed to create order");
+      return;
+    }
+
+    // Step 2: Open Razorpay Checkout
+    const options = {
+      key: data.key, // from backend
+      amount: data.amount, // paise
+      currency: data.currency,
+      name: "AgriConnect",
+      description: "Equipment Rental Payment",
+      order_id: data.orderId,
+      handler: async function (response) {
+        // Step 3: Verify payment
+        const verifyRes = await fetch("http://localhost:5000/api/payments/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: data.orderId,
+            paymentId: response.razorpay_payment_id,
+            signature: response.razorpay_signature,
+          }),
+        });
+
+        const verifyData = await verifyRes.json();
+        if (verifyData.success) {
+          alert("✅ Payment Successful!");
+        } else {
+          alert("❌ Payment Verification Failed!");
+        }
+      },
+      prefill: {
+        name: "Farmer Name",
+        email: "farmer@example.com",
+        contact: "9876543210",
+      },
+      theme: { color: "#2d6a4f" },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error("Payment error:", err);
+    alert("Something went wrong during payment");
+  }
+}

@@ -28,15 +28,15 @@ mongoose
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // ✅ Routes
-const equipmentRoutes = require("./routes/equipmentRoutes");
-const authRoutes = require("./routes/authRoutes");
-const paymentRoutes = require("./routes/paymentRoutes");
-const priceRoutes = require("./routes/priceRoutes"); // ✅ added
+const equipmentRoutes = require("./routes/equipmentRoutes.js");
+const authRoutes = require("./routes/authRoutes.js");
+const paymentRoutes = require("./routes/paymentRoutes.js");
+const priceRoutes = require("./routes/priceRoutes.js");
 
 app.use("/api/equipment", equipmentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/prices", priceRoutes); // ✅ mounted
+app.use("/api/prices", priceRoutes);
 
 // ✅ Root
 app.get("/", (req, res) => res.send("AgriConnect API running"));
@@ -46,6 +46,3 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-
-const priceRoutes = require("./routes/priceRoutes");
-app.use("/api/prices", priceRoutes);
