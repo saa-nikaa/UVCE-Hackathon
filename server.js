@@ -19,23 +19,55 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error("MongoDB connection error:", err));
 
 // Initialize Express app
-const app = express();
+const App = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+App.use(cors());
+App.use(express.json());
 
 // Routes
-app.use("/api/equipment", equipmentRoutes);
-app.use("/api/auth", authRoutes);
+App.use("/api/equipment", equipmentRoutes);
+App.use("/api/auth", authRoutes);
 
 // Root route
-app.get("/", (req, res) => {
+App.get("/", (req, res) => {
   res.send("AgriConnect API is running");
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+App.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 app.use("/api/payment", require("./routes/paymentRoutes"));
+
+// server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+dotenv.config();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected ✅"))
+  .catch(err => console.log("MongoDB connection error:", err));
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use("/api/prices", require("./routes/priceRoutes"));
+
+// Root route
+app.get("/", (req, res) => res.send("AgriConnect API running"));
+
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
+import paymentRoutes from "./routes/paymentRoutes.js";
+import paymentWebhook from "./routes/paymentWebhook.js";
+
+app.use("/api/payments", paymentRoutes);
+app.use("/api/payments", paymentWebhook);

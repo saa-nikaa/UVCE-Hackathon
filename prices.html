@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crop Prices - AgriConnect</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="AgriConnect">
+    <h1>AgriConnect</h1>
+  </div>
+  <nav>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="equipment.html">Equipment Hub</a>
+    <a href="prices.html">Crop Prices</a>
+  </nav>
+</header>
+
+<main class="dashboard-container">
+  <h2>Latest Crop Prices</h2>
+  <div id="latestPrices"></div>
+
+  <h2>Price History</h2>
+  <select id="cropSelect"></select>
+  <canvas id="priceChart" width="600" height="300"></canvas>
+</main>
+
+<script>
+async function loadLatestPrices() {
+  const response = await fetch('http://localhost:5000/api/prices/latest');
+  const prices = await response.json();
+  const container = document.getElementById('latestPrices');
+  container.innerHTML = prices.map(p => `
+    <div class="feature-card">
+      <h3>${p.crop}</h3>
+      <p>Market: ${p.market}</p>
+      <p>Price: ₹${p.pricePerKg}/kg</p>
+    </div>
+  `).join('');
+  
+  // Populate crop select
+  const select = document.getElementById('cropSelect');
+  select.innerHTML = prices.map(p => `<option value="${p.crop}">${p.crop}</option>`).join('');
+  select.addEventListener('change', () => showHistory(select.value));
+  showHistory(prices[0].crop); // initial chart
+}
+
+async function showHistory(crop) {
+  const response = await fetch(`http://localhost:5000/api/prices/history/${crop}`);
+  const data = await response.json();
+  const labels = data.map(d => new Date(d.date).toLocaleDateString());
+  const prices = data.map(d => d.pricePerKg);
+
+  new Chart(document.getElementById('priceChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: `${crop} Price`,
+        data: prices,
+        borderColor: 'green',
+        fill: false
+      }]
+    }
+  });
+}
+
+loadLatestPrices();
+</script>
+</body>
+</html>

@@ -6,7 +6,212 @@
   <title>AgriConnect – Empowering Farmers Digitally</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+<body><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriConnect – Empowering Farmers Digitally</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Commodity Prices Section Styles */
+    .market-prices { padding: 40px 20px; background: #f6f6f6; }
+    .market-prices h2.section-title { text-align: center; margin-bottom: 20px; }
+    .price-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .price-controls label { margin-right: 5px; }
+    .price-controls select, .price-controls button { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; }
+    #latestPrices table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    #latestPrices th, #latestPrices td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    #priceChartContainer { width: 100%; max-width: 800px; margin: auto; }
+  </style>
+</head>
 <body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="assets/logo.jpg" alt="logo" />
+      <h1>AgriConnect</h1>
+    </div>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="equipment.html">Equipment Hub</a>
+      <a href="advisory.html">Advisory</a>
+      <a href="community.html">Community</a>
+      <a href="login.html" class="btn-login">Login</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Empowering Farmers Digitally 🌱</h2>
+      <p>
+        AgriConnect connects farmers with buyers, provides access to equipment,
+        offers AI-powered advisory, and builds a strong farming community.
+      </p>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn-primary">Get Started</a>
+        <a href="login.html" class="btn-secondary">Login</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/farming-hero.jpg" alt="Farming" />
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2 class="section-title">Our Services</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🌾 Marketplace</h3>
+        <p>List your crops, find buyers, and get real-time pricing insights.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🚜 Equipment Hub</h3>
+        <p>Rent, buy, or share farming equipment easily and affordably.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🤖 AI Advisory</h3>
+        <p>Get crop price predictions, weather updates, and farming tips.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📚 Community</h3>
+        <p>Learn modern farming practices and connect with experts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commodity Prices & Analytics Section -->
+  <section class="market-prices">
+    <h2 class="section-title">Market Prices & Analytics</h2>
+    <p style="text-align:center;">Check real-time and historical prices of major crops to make informed decisions.</p>
+
+    <div class="price-controls">
+      <label for="cropSelect">Select Crop:</label>
+      <select id="cropSelect">
+        <option value="wheat">Wheat</option>
+        <option value="rice">Rice</option>
+        <option value="maize">Maize</option>
+        <option value="pulses">Pulses</option>
+      </select>
+
+      <label for="marketSelect">Select Market:</label>
+      <select id="marketSelect">
+        <option value="all">All Markets</option>
+        <option value="marketA">Market A</option>
+        <option value="marketB">Market B</option>
+      </select>
+
+      <button id="loadPricesBtn" class="btn-primary">Load Prices</button>
+    </div>
+
+    <div id="latestPrices">
+      <h3>Latest Prices</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>Min Price (₹/kg)</th>
+            <th>Max Price (₹/kg)</th>
+            <th>Modal Price (₹/kg)</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="pricesTableBody">
+          <tr><td colspan="5">Select a crop and market, then click "Load Prices"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="priceChartContainer">
+      <h3>Price Trends</h3>
+      <canvas id="priceChart" width="400" height="200"></canvas>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <h2>Join AgriConnect Today!</h2>
+    <p>Be part of the digital farming revolution and grow your business smarter.</p>
+    <a href="register.html" class="btn-primary">Sign Up Now</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p>© 2025 AgriConnect. All Rights Reserved.</p>
+      <p>Made with ❤️ for Farmers</p>
+    </div>
+  </footer>
+
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Commodity Prices Script -->
+  <script>
+    document.getElementById("loadPricesBtn").addEventListener("click", async () => {
+      const crop = document.getElementById("cropSelect").value;
+      const market = document.getElementById("marketSelect").value;
+      const tbody = document.getElementById("pricesTableBody");
+      tbody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+
+      try {
+        // MOCK DATA: Replace with real API/backend
+        const mockData = [
+          { market: "Market A", min_price: 45, max_price: 55, modal_price: 50, date: "2025-08-22" },
+          { market: "Market B", min_price: 48, max_price: 60, modal_price: 54, date: "2025-08-22" },
+        ];
+
+        const data = mockData.filter(d => market === "all" || d.market === market);
+
+        tbody.innerHTML = "";
+        data.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.market}</td>
+            <td>${item.min_price}</td>
+            <td>${item.max_price}</td>
+            <td>${item.modal_price}</td>
+            <td>${item.date}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        // Chart
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const labels = data.map(d => d.date);
+        const modalPrices = data.map(d => d.modal_price);
+
+        if(window.priceChartInstance) window.priceChartInstance.destroy();
+        window.priceChartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `${crop} Price Trend`,
+              data: modalPrices,
+              borderColor: '#2d6a4f',
+              backgroundColor: 'rgba(45, 106, 79, 0.2)',
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: { y: { beginAtZero: false } }
+          }
+        });
+
+      } catch(err) {
+        console.error(err);
+        tbody.innerHTML = "<tr><td colspan='5'>Failed to load data</td></tr>";
+      }
+    });
+  </script>
+</body>
+</html>
+
   <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
