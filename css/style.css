@@ -1001,3 +1001,101 @@ footer {
     padding: 20px 15px;
   }
 }
+
+.cert-badge {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-left: 6px;
+}
+
+.cert-badge.uncertified {
+  background-color: #dc3545;
+}
+
+/* =================== Equipment Hub =================== */
+
+/* Feature cards for equipment */
+.feature-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+/* Certified badge */
+.certified-badge {
+  display: inline-block;
+  background-color: #4caf50;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+/* Input for hours */
+input[type="number"].rent-hours {
+  width: 70px;
+  margin-left: 5px;
+  padding: 3px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Add Equipment Form */
+.add-equipment form input,
+.add-equipment form button {
+  display: block;
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 5px;
+  width: 250px;
+}
+
+.add-equipment form button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.add-equipment form button:hover {
+  background-color: #45a049;
+}
+
+/* Section titles */
+main h2 {
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Equipment Grid */
+.equipment-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Pay Now button styling */
+.btn-pay {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-pay:hover {
+  background-color: #218838;
+}
