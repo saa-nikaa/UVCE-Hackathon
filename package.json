@@ -1,0 +1,30 @@
+{
+  "name": "uvce-hackathon",
+  "version": "1.0.0",
+  "description": "AgriConnect is a **web-based platform** designed to **empower farmers** and **buyers** by providing a **secure marketplace** for crops, an **equipment rental hub**, **AI-powered advisory**, and a **community forum** for collaboration.  \r The platform ensures **secure authentication**, smooth navigation, and a **modern dashboard** for managing activities efficiently.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saa-nikaa/UVCE-Hackathon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saa-nikaa/UVCE-Hackathon/issues"
+  },
+  "homepage": "https://github.com/saa-nikaa/UVCE-Hackathon#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
+    "razorpay": "^2.9.6"
+  }
+}

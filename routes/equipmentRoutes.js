@@ -1,9 +1,15 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { certifyEquipment } = require("../controllers/equipmentController");
-const { authMiddleware } = require("../middleware/authMiddleware");
+const { getEquipment, addEquipment, certifyEquipment } = require('../controllers/equipmentController');
+const { protect } = require('/middleware/authMiddleware');
 
-// Only logged-in users with certifier/admin role
-router.patch("/certify/:equipmentId", authMiddleware, certifyEquipment);
+// Get all equipment
+router.get('/', protect, getEquipment);
+
+// Add new equipment
+router.post('/', protect, addEquipment);
+
+// Certify equipment
+router.put('/certify/:id', protect, certifyEquipment);
 
 module.exports = router;
